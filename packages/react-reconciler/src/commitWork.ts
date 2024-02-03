@@ -34,6 +34,7 @@ function commitMutationEffectsOnFiber(finishedWork: FiberNode) {
 }
 
 function commitPlacement(finishedWork: FiberNode) {
+	console.log(finishedWork, '进入place');
 	const hostParent = getHostParent(finishedWork);
 	appendPlacementNodeIntoContainer(finishedWork, hostParent);
 }

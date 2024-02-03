@@ -1,8 +1,14 @@
 import { ReactElementType } from 'shared/ReactTypes';
 import { FiberNode } from './fiber';
 import { UpdateQueue, processUpdateQueue } from './updateQueue';
-import { HostComponent, HostRoot, HostText } from './workTags';
+import {
+	FunctionComponent,
+	HostComponent,
+	HostRoot,
+	HostText
+} from './workTags';
 import { mountChildFiber, reconcileChildFibers } from './childFiber';
+import { renderWithHooks } from './fiberHooks';
 
 // 递归 递阶段
 // 该阶段需要对比子fiber Node的current fiberNode 和 reactElement 来获取下一个wip
@@ -16,8 +22,8 @@ export const beginWork = (wip: FiberNode): any => {
 			return updateHostComponent(wip);
 		case HostText:
 			return null;
-		// case FunctionComponent:
-		// 	return updateFunctionComponent(wip, wip.type, renderLane);
+		case FunctionComponent:
+			return updateFunctionComponent(wip);
 		default:
 			console.log('beginWrong', wip);
 			break;
@@ -46,6 +52,11 @@ function updateHostComponent(wip: FiberNode) {
 	return wip.child;
 }
 
+function updateFunctionComponent(wip: FiberNode) {
+	const nextChildren = renderWithHooks(wip);
+	reconcileChildren(wip, nextChildren);
+	return wip.child;
+}
 function reconcileChildren(wip: FiberNode, children: ReactElementType) {
 	const current = wip.alternate;
 	console.log('创建子fiber', current, '这是current');
