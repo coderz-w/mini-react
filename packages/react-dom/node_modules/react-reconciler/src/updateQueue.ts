@@ -1,3 +1,4 @@
+import { Dispatch } from 'react/src/currentDispatcher';
 import { Action } from 'shared/ReactTypes';
 // Update对象
 export interface Update<State> {
@@ -8,6 +9,7 @@ export interface UpdateQueue<State> {
 	shared: {
 		pending: Update<State> | null;
 	};
+	dispatch: Dispatch<State> | null;
 }
 
 //创造一次更新
@@ -22,8 +24,9 @@ export const createUpdateQueue = <State>() => {
 	return {
 		shared: {
 			// eslint-disable-next-line
-			pending: 1111 as any
-		}
+			pending: null
+		},
+		dispatch: null
 	} as UpdateQueue<State>;
 };
 
